@@ -78,6 +78,68 @@ function isNearDropLevel(
 function injectPL() {
   try {
     ensureTodayPick();
+    const vndTable = document.querySelector("table.portfolio-data") as HTMLTableElement | null;
+    if (vndTable) {
+      const headRow = vndTable.querySelector("thead tr");
+      const ths = headRow ? Array.from(headRow.querySelectorAll("th")) : [];
+      const headerTexts = ths.map(th => (th.textContent || "").trim());
+      let codeIdx = headerTexts.findIndex(t => t.includes("Mã CK"));
+      if (codeIdx < 0) codeIdx = headerTexts.findIndex(t => t.includes("Mã"));
+      let priceIdx = headerTexts.findIndex(t => t.includes("Giá hiện tại"));
+      if (priceIdx < 0) priceIdx = headerTexts.findIndex(t => t.includes("Giá TT"));
+      if (codeIdx >= 0 && priceIdx >= 0) {
+        const bodyRows = vndTable.querySelectorAll("tbody tr");
+        bodyRows.forEach(row => {
+          const cells = Array.from(row.querySelectorAll("td"));
+          if (cells.length === 0) return;
+          const codeCell = cells[codeIdx];
+          const priceCell = cells[priceIdx];
+          if (!codeCell || !priceCell) return;
+          const code = (codeCell.textContent || "").trim();
+          const currentPrice = parseNumberFlexible(priceCell.textContent || "");
+          const basePrice = currentStocks[code];
+          if (!basePrice || !currentPrice) return;
+          let pl = row.querySelector(".pl-indicator") as HTMLSpanElement;
+          if (!pl) {
+            pl = document.createElement("span");
+            pl.className = "pl-indicator";
+            pl.style.marginLeft = "6px";
+            pl.style.fontWeight = "600";
+            const targetAnchor = codeCell.querySelector("span") || codeCell;
+            targetAnchor.appendChild(pl);
+          }
+          const percent = ((currentPrice - basePrice) / basePrice) * 100;
+          let text = ` (${percent.toFixed(2)}%)`;
+          if (todayCode && code === todayCode) {
+            text += " hôm nay";
+          }
+          pl.textContent = text;
+          const dropLevels = DROP_LEVELS[code] || [-10, -15, -20, -25, -30, -35, -40, -45, -50];
+          const diff = currentPrice - basePrice;
+          const statusText = diff >= 0 ? "Lãi" : "Lỗ";
+          const lowerLevel = getLowerLevel(percent, dropLevels);
+          const upperLevel = getUpperLevel(percent, dropLevels);
+          const lowerText = lowerLevel !== null ? `${lowerLevel}%` : "Không có";
+          const upperText = upperLevel !== null ? `${upperLevel}%` : "Không có";
+          pl.title = `Giá vốn: ${basePrice}
+Giá hiện tại: ${currentPrice}
+${statusText}: ${diff.toFixed(2)} (${percent.toFixed(2)}%)
+Mốc dưới gần: ${lowerText}
+Mốc trên gần: ${upperText}`;
+          const targetRow = row as HTMLElement;
+          if (isNearDropLevel(percent, dropLevels)) {
+            pl.style.color = "#ff00ddff";
+            targetRow.style.borderLeft = "4px solid #ff00ddff";
+            targetRow.style.backgroundColor = "rgba(255, 0, 221, 0.1)";
+          } else {
+            pl.style.color = percent < 0 ? "rgb(238,84,66)" : "rgb(0,170,0)";
+            targetRow.style.borderLeft = "";
+            targetRow.style.backgroundColor = "";
+          }
+        });
+        return;
+      }
+    }
     const pineTable = document.querySelector("table.table.table-bordered");
     if (pineTable) {
       const headRow = pineTable.querySelectorAll("thead tr")[0];

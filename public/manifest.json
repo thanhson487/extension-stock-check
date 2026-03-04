@@ -12,7 +12,9 @@
     {
       "matches": [
         "https://trade.pinetree.vn/*",
-        "https://www.trade.pinetree.vn/*"
+        "https://www.trade.pinetree.vn/*",
+        "https://trade.vndirect.com.vn/*",
+        "https://www.trade.vndirect.com.vn/*"
       ],
       "js": ["content.js"]
     },
