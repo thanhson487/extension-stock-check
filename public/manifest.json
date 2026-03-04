@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "% STOCK CHECK By Camcam",
+  "version": "1.0.0",
+  "description": "Check stock profit/loss directly on website",
+  "permissions": ["storage"],
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_title": "Stock Check Settings"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://trade.pinetree.vn/*",
+        "https://www.trade.pinetree.vn/*"
+      ],
+      "js": ["content.js"]
+    },
+    {
+      "matches": ["https://fmarket.vn/*", "https://www.fmarket.vn/*"],
+      "js": ["funds.content.js"]
+    }
+  ]
+}

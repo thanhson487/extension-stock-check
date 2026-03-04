@@ -1,0 +1,16 @@
+{
+  "name": "stock-check-extension",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build -c vite.popup.config.ts && vite build -c vite.content.config.ts && vite build -c vite.funds.content.config.ts",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.1.35",
+    "typescript": "~5.9.3",
+    "vite": "^7.2.4"
+  }
+}

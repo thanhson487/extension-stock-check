@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stock Settings</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <h2>Cấu hình Cổ phiếu</h2>
+    <div class="input-group">
+      <input type="text" id="stockCode" placeholder="Mã CP (VD: HPG)" uppercase>
+      <input type="number" id="stockPrice" placeholder="Giá đỉnh" step="0.01">
+      <button id="addBtn">Thêm/Sửa</button>
+    </div>
+
+    <div class="list-header">
+      <span>Mã</span>
+      <span>Giá đỉnh</span>
+      <span>Hành động</span>
+    </div>
+    <ul id="stockList"></ul>
+
+    <div class="actions">
+      <button id="saveBtn" class="primary">Lưu thay đổi</button>
+    </div>
+  </div>
+  <script type="module" src="popup.ts"></script>
+</body>
+
+</html>
