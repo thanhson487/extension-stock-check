@@ -10,25 +10,27 @@
 
 <body>
   <div class="container">
-    <h2>Cấu hình Cổ phiếu</h2>
-    <div class="input-group">
-      <input type="text" id="stockCode" placeholder="Mã CP (VD: HPG)" uppercase>
-      <input type="number" id="stockPrice" placeholder="Giá đỉnh" step="0.01">
-      <button id="addBtn">Thêm/Sửa</button>
-    </div>
-
-    <div class="list-header">
-      <span>Mã</span>
-      <span>Giá đỉnh</span>
-      <span>Hành động</span>
-    </div>
-    <ul id="stockList"></ul>
-
+    <h2 style="margin-top:16px">Mốc đã mua – Cổ phiếu</h2>
+    <div id="dropStockAll" class="input-group" style="display:flex;flex-direction:column;gap:8px;"></div>
     <div class="actions">
-      <button id="saveBtn" class="primary">Lưu thay đổi</button>
+      <button id="dropStockSave" class="primary">Lưu mốc CP</button>
+      <button id="dropStockExport">Xuất CP</button>
+      <label style="display:inline-block;margin-left:8px">
+        <input type="file" id="dropStockImport" accept="application/json">
+        Import CP
+      </label>
+    </div>
+
+    <h2 style="margin-top:16px">Mốc đã mua – CCQ</h2>
+    <div id="dropFundAll" class="input-group" style="display:flex;flex-direction:column;gap:8px;"></div>
+    <div class="actions">
+      <button id="dropFundSave" class="primary">Lưu mốc CCQ</button>
+      <button id="dropFundExport">Xuất CCQ</button>
+      <label style="display:inline-block;margin-left:8px">
+        <input type="file" id="dropFundImport" accept="application/json">
+        Import CCQ
+      </label>
     </div>
   </div>
   <script type="module" src="popup.ts"></script>
 </body>
-
-</html>

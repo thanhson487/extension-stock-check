@@ -5,6 +5,7 @@ import { DROP_LEVELS_DONE } from "../config/dropLevelsDone";
 let currentStocks: Record<string, number> = { ...DEFAULT_STOCKS };
 let todayCode: string | null = null;
 const BASE_DATE = new Date(2026, 1, 6); // 2026-02-06 (tháng 0-based)
+let DROP_LEVELS_DONE_OVERRIDES: Record<string, Record<string | number, boolean>> = {};
 
 function isWeekday(d: Date): boolean {
   const day = d.getDay();
@@ -115,7 +116,7 @@ function injectPL() {
         }
         pl.textContent = text;
         const baseLevels = DROP_LEVELS[code] || [-10, -15, -20, -25, -30, -35, -40, -45, -50];
-        const doneMap = DROP_LEVELS_DONE[code] || {};
+        const doneMap = DROP_LEVELS_DONE_OVERRIDES[code] || DROP_LEVELS_DONE[code] || {};
         const dropLevels = baseLevels.filter(l => !doneMap[l]);
         const diff = currentPrice - basePrice;
         const statusText = diff >= 0 ? "Lãi" : "Lỗ";
@@ -219,7 +220,7 @@ Mốc trên gần: ${upperText}`;
       pl.textContent = text;
 
       const baseLevels2 = DROP_LEVELS[code] || [-10, -15, -20, -25, -30, -35, -40, -45, -50];
-      const doneMap2 = DROP_LEVELS_DONE[code] || {};
+      const doneMap2 = DROP_LEVELS_DONE_OVERRIDES[code] || DROP_LEVELS_DONE[code] || {};
       const dropLevels = baseLevels2.filter(l => !doneMap2[l]);
 
       // === TOOLTIP ===
@@ -303,4 +304,15 @@ setInterval(() => {
   document.querySelectorAll(".pl-indicator").forEach(el => el.remove());
   injectPL();
 }, 600000);
+
+if (chrome?.storage?.local) {
+  chrome.storage.local.get(["dropLevelsDone"], (res) => {
+    if (res.dropLevelsDone) {
+      DROP_LEVELS_DONE_OVERRIDES = res.dropLevelsDone as Record<string, Record<string | number, boolean>>;
+      injectPL();
+    } else {
+      chrome.storage.local.set({ dropLevelsDone: DROP_LEVELS_DONE });
+    }
+  });
+}
 

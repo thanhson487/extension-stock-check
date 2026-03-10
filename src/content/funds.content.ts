@@ -4,6 +4,7 @@ import { FUND_DROP_DONE } from "../config/fundDropDone";
 
 let todayFundCode: string | null = null;
 const FUND_BASE_DATE = new Date(2026, 1, 6);
+let FUND_DROP_DONE_OVERRIDES: Record<string, Record<string | number, boolean>> = {};
 
 function isWeekday(d: Date): boolean {
   const day = d.getDay();
@@ -85,7 +86,7 @@ function injectFunds() {
       }
       pl.textContent = text;
       const baseLevels = FUND_DROP_LEVELS[code] || [-1, -2, -3, -4, -5];
-      const doneMap = FUND_DROP_DONE[code] || {};
+      const doneMap = FUND_DROP_DONE_OVERRIDES[code] || FUND_DROP_DONE[code] || {};
       const dropLevels = baseLevels.filter(l => !doneMap[l]);
       const lowerLevel = getLowerLevel(percent, dropLevels);
       const upperLevel = getUpperLevel(percent, dropLevels);
@@ -129,4 +130,15 @@ setInterval(() => {
   document.querySelectorAll(".pl-indicator").forEach(el => el.remove());
   injectFunds();
 }, 600000);
+
+if (chrome?.storage?.local) {
+  chrome.storage.local.get(["fundDropDone"], (res) => {
+    if (res.fundDropDone) {
+      FUND_DROP_DONE_OVERRIDES = res.fundDropDone as Record<string, Record<string | number, boolean>>;
+      injectFunds();
+    } else {
+      chrome.storage.local.set({ fundDropDone: FUND_DROP_DONE });
+    }
+  });
+}
 
