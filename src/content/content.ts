@@ -1,5 +1,6 @@
 import { DROP_LEVELS } from "../config/dropLevels";
 import { STOCKS as DEFAULT_STOCKS } from "../config/stocks";
+import { DROP_LEVELS_DONE } from "../config/dropLevelsDone";
 
 let currentStocks: Record<string, number> = { ...DEFAULT_STOCKS };
 let todayCode: string | null = null;
@@ -113,7 +114,9 @@ function injectPL() {
           text += " hôm nay";
         }
         pl.textContent = text;
-        const dropLevels = DROP_LEVELS[code] || [-10, -15, -20, -25, -30, -35, -40, -45, -50];
+        const baseLevels = DROP_LEVELS[code] || [-10, -15, -20, -25, -30, -35, -40, -45, -50];
+        const doneMap = DROP_LEVELS_DONE[code] || {};
+        const dropLevels = baseLevels.filter(l => !doneMap[l]);
         const diff = currentPrice - basePrice;
         const statusText = diff >= 0 ? "Lãi" : "Lỗ";
         const lowerLevel = getLowerLevel(percent, dropLevels);
@@ -215,7 +218,9 @@ Mốc trên gần: ${upperText}`;
       }
       pl.textContent = text;
 
-      const dropLevels = DROP_LEVELS[code] || [-10, -15, -20, -25, -30, -35, -40, -45, -50];
+      const baseLevels2 = DROP_LEVELS[code] || [-10, -15, -20, -25, -30, -35, -40, -45, -50];
+      const doneMap2 = DROP_LEVELS_DONE[code] || {};
+      const dropLevels = baseLevels2.filter(l => !doneMap2[l]);
 
       // === TOOLTIP ===
       const diff = currentPrice - basePrice;

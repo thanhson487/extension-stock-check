@@ -1,5 +1,6 @@
 import { FUND_DROP_LEVELS } from "../config/fundDropLevels";
 import { FUND_STOCKS } from "../config/fundStocks";
+import { FUND_DROP_DONE } from "../config/fundDropDone";
 
 let todayFundCode: string | null = null;
 const FUND_BASE_DATE = new Date(2026, 1, 6);
@@ -83,7 +84,9 @@ function injectFunds() {
         text += " hôm nay";
       }
       pl.textContent = text;
-      const dropLevels = FUND_DROP_LEVELS[code] || [-1, -2, -3, -4, -5];
+      const baseLevels = FUND_DROP_LEVELS[code] || [-1, -2, -3, -4, -5];
+      const doneMap = FUND_DROP_DONE[code] || {};
+      const dropLevels = baseLevels.filter(l => !doneMap[l]);
       const lowerLevel = getLowerLevel(percent, dropLevels);
       const upperLevel = getUpperLevel(percent, dropLevels);
       const lowerText = lowerLevel !== null ? `${lowerLevel}%` : "Không có";
