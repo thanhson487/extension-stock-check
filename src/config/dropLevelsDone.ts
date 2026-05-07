@@ -6,19 +6,19 @@ export const DROP_LEVELS_DONE: Record<string, Record<number, boolean>> = {
     "-65": false
   },
   "HAH": {
-    "-25": false,
+    "-25": true,
     "-40": false,
     "-55": false,
     "-65": false
   },
   "HDG": {
-    "-30": false,
+    "-30": true,
     "-45": false,
     "-55": false,
     "-65": false
   },
   "HPG": {
-    "-20": false,
+    "-20": true,
     "-35": false,
     "-50": false,
     "-60": false
@@ -42,7 +42,7 @@ export const DROP_LEVELS_DONE: Record<string, Record<number, boolean>> = {
     "-45": false
   },
   "SSI": {
-    "-35": false,
+    "-35": true,
     "-50": false,
     "-60": false,
     "-65": false
