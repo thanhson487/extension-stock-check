@@ -9,5 +9,5 @@ export const STOCKS: Record<string, number> = {
   IDC: 52.7,
   KDH: 37.29,
   TPB: 21.49,
-  REE: 70,
+  REE: 64.48,
 };
