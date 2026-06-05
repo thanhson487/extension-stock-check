@@ -1,13 +1,14 @@
 export const STOCKS: Record<string, number> = {
   HDG: 36.1,
-  HPG: 31.55,
-  VND: 27,
+  HPG: 29.85,
+  VND: 29,
   VPB: 38.5,
-  SSI: 38.6,
-  DBC: 31.9,
-  HAH: 67.8,
-  IDC: 52.7,
-  KDH: 37.29,
-  TPB: 21.49,
+  SSI: 39.6,
+  DBC: 28.49,
+  HAH: 71.7,
+  IDC: 58.02,
+  KDH: 39.22,
+  TPB: 21.71,
   REE: 64.48,
+  TCB: 41.13
 };

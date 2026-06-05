@@ -25,6 +25,7 @@ export const DROP_LEVELS: Record<string, number[]> = {
   // Ngân hàng (chu kỳ vừa)
   TPB: [-25, -40, -50, -55],
   VPB: [-25, -40, -50, -55],
+  TCB: [-25, -40, -50, -55],
 
   // Hạ tầng – tiện ích (ổn định hơn, kích hoạt sớm hơn)
   REE: [-15, -25, -35, -45],

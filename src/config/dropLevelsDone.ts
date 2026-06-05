@@ -31,7 +31,7 @@ export const DROP_LEVELS_DONE: Record<string, Record<number, boolean>> = {
   },
   "KDH": {
     "-25": true,
-    "-40": false,
+    "-40": true,
     "-50": false,
     "-60": false
   },
@@ -61,6 +61,12 @@ export const DROP_LEVELS_DONE: Record<string, Record<number, boolean>> = {
   },
   "VPB": {
     "-25": true,
+    "-40": false,
+    "-50": false,
+    "-55": false
+  },
+    "TCB": {
+    "-25": false,
     "-40": false,
     "-50": false,
     "-55": false
