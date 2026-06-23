@@ -2,42 +2,39 @@ import { FUND_DROP_LEVELS } from "../config/fundDropLevels";
 import { FUND_STOCKS } from "../config/fundStocks";
 import { FUND_DROP_DONE } from "../config/fundDropDone";
 
-let todayFundCode: string | null = null;
+let weekFundCode: string | null = null;
 const FUND_BASE_DATE = new Date(2026, 1, 6);
 let FUND_DROP_DONE_OVERRIDES: Record<string, Record<string | number, boolean>> = {};
-
-function isWeekday(d: Date): boolean {
-  const day = d.getDay();
-  return day >= 1 && day <= 5;
-}
 
 function getSortedFundCodes(): string[] {
   return Object.keys(FUND_STOCKS).sort((a, b) => a.localeCompare(b));
 }
 
-function ensureTodayFundPick() {
+function ensureWeekFundPick() {
   const codes = getSortedFundCodes();
   if (codes.length === 0) {
-    todayFundCode = null;
+    weekFundCode = null;
     return;
   }
   const now = new Date();
   const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  if (!isWeekday(todayMidnight)) {
-    todayFundCode = null;
-    return;
-  }
-  let count = 0;
-  const cur = new Date(FUND_BASE_DATE.getFullYear(), FUND_BASE_DATE.getMonth(), FUND_BASE_DATE.getDate());
-  while (cur < todayMidnight) {
-    if (isWeekday(cur)) count++;
-    cur.setDate(cur.getDate() + 1);
-  }
-  const idx = count % codes.length;
-  todayFundCode = codes[idx] || null;
+  
+  const baseMonday = new Date(FUND_BASE_DATE.getFullYear(), FUND_BASE_DATE.getMonth(), FUND_BASE_DATE.getDate());
+  const baseDay = baseMonday.getDay();
+  baseMonday.setDate(baseMonday.getDate() - baseDay + (baseDay === 0 ? -6 : 1));
+  
+  const currentMonday = new Date(todayMidnight.getFullYear(), todayMidnight.getMonth(), todayMidnight.getDate());
+  const currentDay = currentMonday.getDay();
+  currentMonday.setDate(currentMonday.getDate() - currentDay + (currentDay === 0 ? -6 : 1));
+  
+  const diffTime = currentMonday.getTime() - baseMonday.getTime();
+  const diffWeeks = Math.round(diffTime / (1000 * 60 * 60 * 24 * 7));
+  
+  const idx = Math.max(0, diffWeeks) % codes.length;
+  weekFundCode = codes[idx] || null;
 }
 
-ensureTodayFundPick();
+ensureWeekFundPick();
 
 function getLowerLevel(percent: number, levels: number[]): number | null {
   const lower = levels.filter((l) => l <= percent);
@@ -57,7 +54,7 @@ function isNearDropLevel(percent: number, levels: number[], range = 1): boolean 
 
 function injectFunds() {
   try {
-    ensureTodayFundPick();
+    ensureWeekFundPick();
     const container = document.querySelector("#table-fund-category");
     const fundRows = container
       ? container.querySelectorAll("tbody tr")
@@ -81,8 +78,8 @@ function injectFunds() {
         codeEl.appendChild(pl);
       }
       let text = ` (${percent.toFixed(2)}%)`;
-      if (todayFundCode && code === todayFundCode) {
-        text += " hôm nay";
+      if (weekFundCode && code === weekFundCode) {
+        text += " tuần này";
       }
       pl.textContent = text;
       const baseLevels = FUND_DROP_LEVELS[code] || [-1, -2, -3, -4, -5];

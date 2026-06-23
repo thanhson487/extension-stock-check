@@ -3,42 +3,39 @@ import { STOCKS as DEFAULT_STOCKS } from "../config/stocks";
 import { DROP_LEVELS_DONE } from "../config/dropLevelsDone";
 
 let currentStocks: Record<string, number> = { ...DEFAULT_STOCKS };
-let todayCode: string | null = null;
+let weekCode: string | null = null;
 const BASE_DATE = new Date(2026, 1, 6); // 2026-02-06 (tháng 0-based)
 let DROP_LEVELS_DONE_OVERRIDES: Record<string, Record<string | number, boolean>> = {};
-
-function isWeekday(d: Date): boolean {
-  const day = d.getDay();
-  return day >= 1 && day <= 5;
-}
 
 function getSortedCodes(): string[] {
   return Object.keys(currentStocks).sort((a, b) => a.localeCompare(b));
 }
 
-function ensureTodayPick() {
+function ensureWeekPick() {
   const codes = getSortedCodes();
   if (codes.length === 0) {
-    todayCode = null;
+    weekCode = null;
     return;
   }
   const now = new Date();
   const todayMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  if (!isWeekday(todayMidnight)) {
-    todayCode = null;
-    return;
-  }
-  let count = 0;
-  const cur = new Date(BASE_DATE.getFullYear(), BASE_DATE.getMonth(), BASE_DATE.getDate());
-  while (cur < todayMidnight) {
-    if (isWeekday(cur)) count++;
-    cur.setDate(cur.getDate() + 1);
-  }
-  const idx = count % codes.length;
-  todayCode = codes[idx] || null;
+  
+  const baseMonday = new Date(BASE_DATE.getFullYear(), BASE_DATE.getMonth(), BASE_DATE.getDate());
+  const baseDay = baseMonday.getDay();
+  baseMonday.setDate(baseMonday.getDate() - baseDay + (baseDay === 0 ? -6 : 1));
+  
+  const currentMonday = new Date(todayMidnight.getFullYear(), todayMidnight.getMonth(), todayMidnight.getDate());
+  const currentDay = currentMonday.getDay();
+  currentMonday.setDate(currentMonday.getDate() - currentDay + (currentDay === 0 ? -6 : 1));
+  
+  const diffTime = currentMonday.getTime() - baseMonday.getTime();
+  const diffWeeks = Math.round(diffTime / (1000 * 60 * 60 * 24 * 7));
+  
+  const idx = Math.max(0, diffWeeks) % codes.length;
+  weekCode = codes[idx] || null;
 }
 
-ensureTodayPick();
+ensureWeekPick();
 
 
 
@@ -79,7 +76,7 @@ function isNearDropLevel(
 
 function injectPL() {
   try {
-    ensureTodayPick();
+    ensureWeekPick();
     const pineTable = document.querySelector("table.table.table-bordered");
     if (pineTable) {
       const headRow = pineTable.querySelectorAll("thead tr")[0];
@@ -111,8 +108,8 @@ function injectPL() {
         }
         const percent = ((currentPrice - basePrice) / basePrice) * 100;
         let text = ` (${percent.toFixed(2)}%)`;
-        if (todayCode && code === todayCode) {
-          text += " hôm nay";
+        if (weekCode && code === weekCode) {
+          text += " tuần này";
         }
         pl.textContent = text;
         const baseLevels = DROP_LEVELS[code] || [-10, -15, -20, -25, -30, -35, -40, -45, -50];
@@ -214,8 +211,8 @@ Mốc trên gần: ${upperText}`;
       const percent = ((currentPrice - basePrice) / basePrice) * 100;
 
       let text = ` (${percent.toFixed(2)}%)`;
-      if (todayCode && code === todayCode) {
-        text += " hôm nay";
+      if (weekCode && code === weekCode) {
+        text += " tuần này";
       }
       pl.textContent = text;
 
