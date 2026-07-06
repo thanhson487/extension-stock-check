@@ -13,7 +13,7 @@ export const DROP_LEVELS_DONE: Record<string, Record<number, boolean>> = {
   },
   "HDG": {
     "-30": true,
-    "-45": false,
+    "-45": true,
     "-55": false,
     "-65": false
   },
@@ -37,7 +37,7 @@ export const DROP_LEVELS_DONE: Record<string, Record<number, boolean>> = {
   },
   "REE": {
     "-15": true,
-    "-25": false,
+    "-25": true,
     "-35": false,
     "-45": false
   },
@@ -65,7 +65,7 @@ export const DROP_LEVELS_DONE: Record<string, Record<number, boolean>> = {
     "-50": false,
     "-55": false
   },
-    "TCB": {
+  "TCB": {
     "-25": false,
     "-40": false,
     "-50": false,
