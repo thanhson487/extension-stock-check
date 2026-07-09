@@ -47,18 +47,6 @@ export const DROP_LEVELS_DONE: Record<string, Record<number, boolean>> = {
     "-60": false,
     "-65": false
   },
-  "TPB": {
-    "-25": true,
-    "-40": false,
-    "-50": false,
-    "-55": false
-  },
-  "VND": {
-    "-35": true,
-    "-50": false,
-    "-60": false,
-    "-65": false
-  },
   "VPB": {
     "-25": true,
     "-40": false,

@@ -20,10 +20,8 @@ export const DROP_LEVELS: Record<string, number[]> = {
 
   // Chứng khoán (beta cao)
   SSI: [-35, -50, -60, -65],
-  VND: [-35, -50, -60, -65],
 
   // Ngân hàng (chu kỳ vừa)
-  TPB: [-25, -40, -50, -55],
   VPB: [-25, -40, -50, -55],
   TCB: [-25, -40, -50, -55],
 
